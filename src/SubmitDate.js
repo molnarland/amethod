@@ -1,11 +1,12 @@
 /**@flow*/
-const {workingHours, workingDays} = require('./global');
+const { workingHours, workingDays } = require('./global');
 
 interface SubmitDateInterface
 {
 	+pretty: string;
 
 	constructor (date: string|number): void;
+	addHours (hours: number): SubmitDateInterface
 }
 
 module.exports = class SubmitDate extends Date implements SubmitDateInterface
@@ -16,6 +17,13 @@ module.exports = class SubmitDate extends Date implements SubmitDateInterface
 
 		this._checkIsValidDate();
 		this._checkInWorkingRange();
+	}
+
+	addHours (hours: number): SubmitDate
+	{
+		this.setHours(this.getHours() + hours);
+
+		return this;
 	}
 
 	get pretty (): string

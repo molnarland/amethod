@@ -70,4 +70,22 @@ describe('SubmitDate', () =>
 				.equal('605-01-11 09:01:11');
 		});
 	});
+
+	describe('#addHours()', () =>
+	{
+		it('on a day', () =>
+		{
+			expect(new SubmitDate('2018-04-27 10:00:00').addHours(4).pretty)
+				.to
+				.equal('2018-04-27 14:00:00');
+
+			expect(new SubmitDate('2018-04-26 9:00:00').addHours(5).pretty)
+				.to
+				.equal('2018-04-26 14:00:00');
+
+			expect(new SubmitDate('2018-04-25 9:00:00').addHours(8).pretty)
+				.to
+				.equal('2018-04-25 17:00:00');
+		});
+	});
 });
