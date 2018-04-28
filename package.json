@@ -8,7 +8,9 @@
     "postflow": "./node_modules/.bin/flow-remove-types src/ --out-dir build/ --pretty --all",
     "pretest": "npm run flow",
     "test": "clear && nyc mocha test/**/test*.js --colors --trace-warnings",
-    "postinstall": "./node_modules/flow-bin/cli.js init && ./node_modules/flow-typed/dist/cli.js install"
+    "postinstall": "./node_modules/flow-bin/cli.js init && ./node_modules/flow-typed/dist/cli.js install",
+    "prestart": "npm run flow",
+    "start": "node ./build/index.js"
   },
   "repository": {
     "type": "git",
