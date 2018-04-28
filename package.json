@@ -7,8 +7,8 @@
     "flow": "flow src/ --color=always",
     "postflow": "./node_modules/.bin/flow-remove-types src/ --out-dir build/ --pretty --all",
     "pretest": "npm run flow",
-    "test": "clear && nyc mocha test/**/test*.js --colors --trace-warnings -t 10000 --reporter nyan",
-    "postinstall": "./node_modules/flow-typed/dist/cli.js install"
+    "test": "clear && nyc mocha test/**/test*.js --colors --trace-warnings --reporter nyan",
+    "postinstall": "./node_modules/flow-bin/cli.js init && ./node_modules/flow-typed/dist/cli.js install"
   },
   "repository": {
     "type": "git",
@@ -24,9 +24,5 @@
     "flow-typed": "^2.4.0",
     "mocha": "^5.1.0",
     "nyc": "^11.6.0"
-  },
-  "dependencies": {
-    "cassandra-driver": "^3.4.1",
-    "mysql": "^2.15.0"
   }
 }
