@@ -1,5 +1,6 @@
 /**@flow*/
 const { workingHours, workingDays } = require('./global');
+const checkDate = require('./checkDateTime');
 
 interface CalculateDateInterface
 {
@@ -15,8 +16,7 @@ module.exports = class CalculateDate extends Date implements CalculateDateInterf
 	{
 		super(date);
 
-		this._checkIsValidDate();
-		this._checkInWorkingRange();
+		checkDate(this);
 	}
 
 	addHours (hours: number): CalculateDate
@@ -76,68 +76,5 @@ module.exports = class CalculateDate extends Date implements CalculateDateInterf
 	_addZeroToOneDigitNumber (number: number): string
 	{
 		return (number < 10) ? `0${number}` : String(number);
-	}
-
-	/**
-	 * @private
-	 */
-	_checkIsValidDate (): void
-	{
-		if (isNaN(this.getHours()))
-		{
-			throw TypeError('Given invalid date');
-		}
-	}
-
-	/**
-	 * @private
-	 */
-	_checkInWorkingRange (): void
-	{
-		this._checkIsBeforeWorkingHours();
-		this._checkIsAfterWorkingHours();
-		this._checkIsWeekend();
-	}
-
-	/**
-	 * @private
-	 */
-	_checkIsBeforeWorkingHours (): void
-	{
-		if (this.getHours() < workingHours.from)
-		{
-			throw Error('Given ticket too early');
-		}
-	}
-
-	/**
-	 * @private
-	 */
-	_checkIsAfterWorkingHours (): void
-	{
-		const error = Error('Given ticket too lately');
-		const hour = this.getHours();
-		const hourTo = workingHours.to;
-
-		if (hour > hourTo)
-		{
-			throw error;
-		}
-
-		if (hour === hourTo && (this.getMinutes() > 0 || this.getSeconds() > 0))
-		{
-			throw error;
-		}
-	}
-
-	/**
-	 * @private
-	 */
-	_checkIsWeekend (): void
-	{
-		if (this.getDay() < workingDays.from || this.getDay() > workingDays.to)
-		{
-			throw Error('Nobody work on weekends!');
-		}
 	}
 };
