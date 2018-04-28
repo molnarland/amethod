@@ -1,15 +1,15 @@
 /**@flow*/
 const { workingHours, workingDays } = require('./global');
 
-interface SubmitDateInterface
+interface CalculateDateInterface
 {
 	+pretty: string;
 
 	constructor (date: string|number): void;
-	addHours (hours: number): SubmitDateInterface
+	addHours (hours: number): CalculateDateInterface
 }
 
-module.exports = class SubmitDate extends Date implements SubmitDateInterface
+module.exports = class CalculateDate extends Date implements CalculateDateInterface
 {
 	constructor (date: string|number)
 	{
@@ -19,21 +19,29 @@ module.exports = class SubmitDate extends Date implements SubmitDateInterface
 		this._checkInWorkingRange();
 	}
 
-	addHours (hours: number): SubmitDate
+	addHours (hours: number): CalculateDate
 	{
 		const { from, to } = workingHours;
-		const currentHours = this.getHours();
+		const workingHoursInADay: number = to - from;
+		let startHourInTheCurrentDay: number = this.getHours();
 
-		let endingHours: number = currentHours + hours;
-
-		if (endingHours > to)
+		while (hours !== 0)
 		{
-			endingHours = hours - Math.abs(currentHours - to) + from;
+			const endingHours: number = startHourInTheCurrentDay + hours;
 
-			this.setDate(this.getDate() + 1);
+			if (hours > workingHoursInADay || endingHours > to)
+			{
+				hours -= Math.abs(startHourInTheCurrentDay - to);
+				this._addOneWorkingDay();
+
+				startHourInTheCurrentDay = from;
+			}
+			else
+			{
+				hours = 0;
+				this.setHours(endingHours);
+			}
 		}
-
-		this.setHours(endingHours);
 
 		return this;
 	}
@@ -48,6 +56,21 @@ module.exports = class SubmitDate extends Date implements SubmitDateInterface
 		const seconds = this._addZeroToOneDigitNumber(this.getSeconds());
 
 		return `${years}-${months}-${days} ${hours}:${minutes}:${seconds}`;
+	}
+
+	_addOneWorkingDay ()
+	{
+		const { from, to } = workingDays;
+
+		let currentWeekDay: number;
+
+		do
+		{
+			this.setDate(this.getDate() + 1);
+
+			currentWeekDay = this.getDay();
+		}
+		while (currentWeekDay < from || currentWeekDay > to);
 	}
 
 	_addZeroToOneDigitNumber (number: number): string

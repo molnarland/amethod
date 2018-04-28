@@ -1,10 +1,8 @@
 /**@flow*/
-const SubmitDate = require('./SubmitDate');
+const CalculateDate = require('./CalculateDate');
 
 module.exports = function calculateDueDate (submitDate: string|number, turnaroundTime: number)
 {
-	const date = new SubmitDate(submitDate);
-
-
+	return new CalculateDate(submitDate).addHours(turnaroundTime).pretty;
 };
 
