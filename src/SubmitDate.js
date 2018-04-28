@@ -21,7 +21,19 @@ module.exports = class SubmitDate extends Date implements SubmitDateInterface
 
 	addHours (hours: number): SubmitDate
 	{
-		this.setHours(this.getHours() + hours);
+		const { from, to } = workingHours;
+		const currentHours = this.getHours();
+
+		let endingHours: number = currentHours + hours;
+
+		if (endingHours > to)
+		{
+			endingHours = hours - Math.abs(currentHours - to) + from;
+
+			this.setDate(this.getDate() + 1);
+		}
+
+		this.setHours(endingHours);
 
 		return this;
 	}

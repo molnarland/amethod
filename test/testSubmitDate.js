@@ -87,5 +87,21 @@ describe('SubmitDate', () =>
 				.to
 				.equal('2018-04-25 17:00:00');
 		});
+
+
+		it('through 2 days', () =>
+		{
+			expect(new SubmitDate('2018-04-24 10:00:00').addHours(8).pretty)
+				.to
+				.equal('2018-04-25 10:00:00');
+
+			expect(new SubmitDate('2018-04-26 9:00:00').addHours(10).pretty)
+				.to
+				.equal('2018-04-27 11:00:00');
+
+			expect(new SubmitDate('2018-04-25 16:00:00').addHours(2).pretty)
+				.to
+				.equal('2018-04-26 10:00:00');
+		});
 	});
 });
