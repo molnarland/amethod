@@ -1,7 +1,14 @@
 /**@flow*/
 const {workingHours, workingDays} = require('./global');
 
-module.exports = class SubmitDate extends Date
+interface SubmitDateInterface
+{
+	+pretty: string;
+
+	constructor (date: string|number): void;
+}
+
+module.exports = class SubmitDate extends Date implements SubmitDateInterface
 {
 	constructor (date: string|number)
 	{
@@ -11,6 +18,26 @@ module.exports = class SubmitDate extends Date
 		this._checkInWorkingRange();
 	}
 
+	get pretty (): string
+	{
+		const years = this.getFullYear();
+		const months = this._addZeroToOneDigitNumber(this.getMonth() + 1);
+		const days = this._addZeroToOneDigitNumber(this.getDate());
+		const hours = this._addZeroToOneDigitNumber(this.getHours());
+		const minutes = this._addZeroToOneDigitNumber(this.getMinutes());
+		const seconds = this._addZeroToOneDigitNumber(this.getSeconds());
+
+		return `${years}-${months}-${days} ${hours}:${minutes}:${seconds}`;
+	}
+
+	_addZeroToOneDigitNumber (number: number): string
+	{
+		return (number < 10) ? `0${number}` : String(number);
+	}
+
+	/**
+	 * @private
+	 */
 	_checkIsValidDate (): void
 	{
 		if (isNaN(this.getHours()))
@@ -19,6 +46,9 @@ module.exports = class SubmitDate extends Date
 		}
 	}
 
+	/**
+	 * @private
+	 */
 	_checkInWorkingRange (): void
 	{
 		this._checkIsBeforeWorkingHours();
@@ -57,6 +87,9 @@ module.exports = class SubmitDate extends Date
 		}
 	}
 
+	/**
+	 * @private
+	 */
 	_checkIsWeekend (): void
 	{
 		if (this.getDay() < workingDays.from || this.getDay() > workingDays.to)

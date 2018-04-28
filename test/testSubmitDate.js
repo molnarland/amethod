@@ -56,4 +56,18 @@ describe('SubmitDate', () =>
 			});
 		});
 	});
+
+	describe('#pretty()', () =>
+	{
+		it('should get out the date how set in', () =>
+		{
+			expect(new SubmitDate('2018-04-27 09:06:00').pretty)
+				.to
+				.equal('2018-04-27 09:06:00');
+
+			expect(new SubmitDate('605-01-11 09:01:11').pretty)
+				.to
+				.equal('605-01-11 09:01:11');
+		});
+	});
 });
